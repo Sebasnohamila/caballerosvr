@@ -95,12 +95,21 @@
         <button id="start-button">VER EXPERIENCIA</button>
     </div>
 
-    <a-scene id="vr-scene" embedded vr-mode-ui="enabled: false">
+<a-scene id="vr-scene" embedded vr-mode-ui="enabled: false">
         <a-assets>
             <video id="bg-video" src="caballeros.mp4" loop crossorigin="anonymous" playsinline webkit-playsinline></video>
         </a-assets>
 
-        <a-videosphere src="#bg-video" radius="50" theta-length="180" theta-start="90" side="back" position="0 0 0"></a-videosphere>
+        <a-cylinder 
+            src="#bg-video" 
+            radius="20" 
+            height="12" 
+            theta-length="120" 
+            theta-start="120" 
+            side="back" 
+            open-ended="true"
+            position="0 0 0">
+        </a-cylinder>
 
         <a-camera position="0 0 0" look-controls="enabled: true; touchEnabled: false"></a-camera>
     </a-scene>
