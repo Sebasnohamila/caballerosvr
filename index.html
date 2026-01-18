@@ -15,7 +15,6 @@
         /* --- CAPA 1: FONDO VR (A-Frame) --- */
         #vr-scene {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; 
-            /* Truco: Opacidad 0 inicial para que no se vea negro de golpe si falla algo, aunque el splash lo cubre */
             opacity: 1; 
         }
 
@@ -48,7 +47,6 @@
             background-color: white;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 999; 
-            /* Transición más lenta para el desvanecimiento suave */
             transition: opacity 1.5s ease-out, visibility 1.5s; 
         }
 
@@ -116,6 +114,7 @@
         loading="eager"
         camera-controls
         auto-rotate
+        autoplay
         shadow-intensity="1"
         ar
         ar-modes="webxr scene-viewer quick-look">
@@ -143,7 +142,7 @@
         function checkAllLoaded() {
             if (isModelLoaded && isSceneLoaded) {
                 console.log("Todo listo: Modelo + Escenario");
-                // Pequeño delay de seguridad para asegurar renderizado de textura
+                // Pequeño delay de seguridad
                 setTimeout(() => {
                     loaderContainer.style.display = 'none';
                     startButton.style.display = 'block';
@@ -161,6 +160,12 @@
             console.log("Modelo 3D cargado.");
             isModelLoaded = true;
             checkAllLoaded();
+            
+            // FUERZA EXTRA: Por si acaso el atributo 'autoplay' falla en algunos navegadores
+            // intentamos reproducir la animación manualmente via JS al cargar
+            if (modelViewer.availableAnimations.length > 0) {
+                modelViewer.play();
+            }
         });
 
         modelViewer.addEventListener('error', (error) => {
@@ -191,10 +196,9 @@
             // Transición suave (Fade Out)
             splashScreen.style.opacity = '0';
             
-            // Esperamos a que termine la animación CSS (1.5s) para quitar el div
             setTimeout(() => { 
                 splashScreen.style.visibility = 'hidden';
-                splashScreen.style.display = 'none'; // Seguridad
+                splashScreen.style.display = 'none';
                 document.body.classList.add('loaded');
             }, 1500);
         });
